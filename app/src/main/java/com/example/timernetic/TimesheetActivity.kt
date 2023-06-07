@@ -12,11 +12,16 @@ import android.view.View
 import android.widget.Button
 import android.widget.EditText
 import android.widget.ImageView
+import android.widget.Toast
 import androidx.appcompat.app.ActionBarDrawerToggle
 import androidx.core.app.ActivityCompat
 import androidx.core.view.GravityCompat
 import androidx.drawerlayout.widget.DrawerLayout
+import com.example.timernetic.utils.ImageEncoder
+import com.google.android.gms.tasks.Task
 import com.google.android.material.navigation.NavigationView
+import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.database.*
 
 class TimesheetActivity : AppCompatActivity() {
 
@@ -32,6 +37,9 @@ class TimesheetActivity : AppCompatActivity() {
     //take pic btn
     private lateinit var taskPicIV: ImageView
     private lateinit var addGroupbtn:ImageView
+    //Database
+    private lateinit var auth: FirebaseAuth
+    private lateinit var dataReference: DatabaseReference
 
     private lateinit var drawerLayout: DrawerLayout
     private lateinit var drawerToggle: ActionBarDrawerToggle
@@ -81,6 +89,75 @@ class TimesheetActivity : AppCompatActivity() {
         setContentView(R.layout.activity_timesheet)
         //ADD TO DATABASE
         addGroupbtn= findViewById(R.id.addGroupbtn)
+        taskName= findViewById(R.id.taskName)
+        taskGroupName= findViewById(R.id.taskGroupName)
+        taskDescription= findViewById(R.id.taskDescription)
+        taskStartDate= findViewById(R.id.taskStartDate)
+        taskEndDate= findViewById(R.id.taskStartDate)
+
+        addGroupbtn.setOnClickListener{
+            val taskNme = taskName.text.toString()
+           val taskGrupName= taskGroupName.text.toString()
+            val  taskDescrption= taskDescription.text.toString()
+            val  taskStartate= taskStartDate.text.toString()
+            val taskEndDte= taskEndDate.text.toString()
+            var taskPicture:String?=null
+            if (pic != null) {
+                taskPicture = pic?.let { ImageEncoder.encodeImage(it) }
+            }
+            if (taskNme.isNotEmpty()) {
+                auth = FirebaseAuth.getInstance()
+                val currentUser = auth.currentUser
+                if (currentUser != null) {
+                    val userId = currentUser.uid
+                    val dataReference = FirebaseDatabase.getInstance().reference
+                        .child("Task")
+                        .child(userId)
+
+                    // Check if the category already exists
+                    val TaskQuery = dataReference.orderByChild("Task").equalTo(taskNme)
+                    TaskQuery.addListenerForSingleValueEvent(object : ValueEventListener {
+                        override fun onDataChange(dataSnapshot: DataSnapshot) {
+                            if (dataSnapshot.exists()) {
+                                // Category already exists
+                                Toast.makeText(applicationContext, "Task already exists", Toast.LENGTH_SHORT).show()
+                            } else {
+                                // Category does not exist, add it to the database
+                                val newTask=dataReference.push()
+
+                                newTask.child("taskName").setValue(taskNme)
+                                newTask.child("taskGroupName").setValue(taskGrupName)
+                                newTask.child("taskDescription").setValue(taskDescrption)
+                                newTask.child("taskStartDate").setValue(taskStartate)
+                                newTask.child("taskEndDate").setValue(taskEndDte)
+                                newTask.child("taskPicture").setValue(taskPicture).addOnCompleteListener { groupTask ->
+                                    if (groupTask.isSuccessful) {
+                                        Toast.makeText(applicationContext, "Task added successfully", Toast.LENGTH_SHORT).show()
+                                        taskName.text = null
+                                        taskGroupName.text = null
+                                        taskDescription.text = null
+                                        taskStartDate.text = null
+                                        taskEndDate.text = null
+                                        taskPicture = null
+                                        taskPictureIV.visibility = View.GONE
+                                    } else {
+                                        Toast.makeText(applicationContext, groupTask.exception?.message, Toast.LENGTH_SHORT).show()
+                                    }
+                                }
+                            }
+                        }
+
+                        override fun onCancelled(databaseError: DatabaseError) {
+                            Toast.makeText(applicationContext, databaseError.message, Toast.LENGTH_SHORT).show()
+                        }
+                    })
+                } else {
+                    Toast.makeText(applicationContext, "User is not authenticated", Toast.LENGTH_SHORT).show()
+                }
+            } else {
+                Toast.makeText(applicationContext, "Please enter a Group Name", Toast.LENGTH_SHORT).show()
+            }
+        }
 
         //close group btn
         closeGroupPopUpBtn= findViewById(R.id.closeGroupPopUpBtn)
