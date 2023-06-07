@@ -12,6 +12,8 @@ import androidx.recyclerview.widget.RecyclerView
 import com.example.timernetic.utils.groupAdapter
 import com.example.timernetic.utils.groupData
 import com.google.android.material.navigation.NavigationView
+import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.database.*
 
 class ViewGroupActivity : AppCompatActivity() {
     private lateinit var drawerLayout: DrawerLayout
@@ -21,11 +23,15 @@ class ViewGroupActivity : AppCompatActivity() {
     private lateinit var taskAdapter: groupAdapter
     private val taskList: MutableList<groupData> = mutableListOf()
 
+    private lateinit var auth: FirebaseAuth
+    private lateinit var dataReference: DatabaseReference
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        setContentView(R.layout.activity_view_group)
+
         drawerLayout = findViewById(R.id.drawer_layout)
         drawerToggle = ActionBarDrawerToggle(this, drawerLayout, R.string.open_drawer, R.string.close_drawer)
-
         drawerLayout.addDrawerListener(drawerToggle)
         drawerToggle.syncState()
 
@@ -44,8 +50,6 @@ class ViewGroupActivity : AppCompatActivity() {
                     val intent = Intent(this, GoalsActivity::class.java)
                     startActivity(intent)
                 }
-
-
                 R.id.nav_option3 -> {
                     // Handle option 3 click
                     val intent = Intent(this, ViewTimesheetActivity::class.java)
@@ -53,7 +57,6 @@ class ViewGroupActivity : AppCompatActivity() {
                 }
                 R.id.nav_option4 -> {
                     // Handle option 4 click
-
                 }
                 R.id.nav_option5 -> {
                     // Handle option 5 click
@@ -64,20 +67,56 @@ class ViewGroupActivity : AppCompatActivity() {
             drawerLayout.closeDrawer(GravityCompat.START)
             true
         }
-        setContentView(R.layout.activity_view_group)
-        //recycler view code
 
+        //recycler view code
         recyclerViewtask = findViewById(R.id.recyclerView)
 
-        // Create the adapter with an empty category list
+        // Create the adapter with an empty task list
         taskAdapter = groupAdapter(taskList)
 
         // Set the adapter for the RecyclerView
-        recyclerViewCategories.adapter = categoryAdapter
+        recyclerViewtask.adapter = taskAdapter
 
         // Set the layout manager for the RecyclerView
-        recyclerViewCategories.layoutManager = LinearLayoutManager(this)
+        recyclerViewtask.layoutManager = LinearLayoutManager(this)
+
+        auth = FirebaseAuth.getInstance()
+        val currentUser = auth.currentUser
+        if (currentUser != null) {
+            val userId = currentUser.uid
+
+            // Load task data from Firebase Realtime Database
+            val dataReference = FirebaseDatabase.getInstance().reference
+                .child("task")
+                .child(userId)
+
+            val query = dataReference.orderByChild("task").equalTo(userId)
+            query.addValueEventListener(object : ValueEventListener {
+                override fun onDataChange(dataSnapshot: DataSnapshot) {
+                    taskList.clear()
+
+                    // Iterate through the data snapshot and add tasks to the list
+                    for (taskSnapshot in dataSnapshot.children) {
+                        val task =
+                            taskSnapshot.child("task").getValue(String::class.java)
+
+                        task?.let {
+                            val tasks = groupData(it)
+                            taskList.add(tasks)
+                        }
+                    }
+
+                    // Notify the adapter that the data has changed
+                    taskAdapter.notifyDataSetChanged()
+                }
+
+                override fun onCancelled(databaseError: DatabaseError) {
+                    // Handle the error if needed
+                }
+            })
+        }
     }
+
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         if (drawerToggle.onOptionsItemSelected(item)) {
             return true
