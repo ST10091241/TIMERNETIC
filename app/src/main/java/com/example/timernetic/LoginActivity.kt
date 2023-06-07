@@ -5,6 +5,7 @@ import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.widget.ImageView
 import android.widget.EditText
+import android.widget.TextView
 import android.widget.Toast
 import com.google.android.gms.tasks.OnCompleteListener
 import com.google.firebase.auth.FirebaseAuth
@@ -14,6 +15,7 @@ class LoginActivity : AppCompatActivity() {
     private lateinit var proceedbtn:ImageView
     private lateinit var emailtxt: EditText
     private lateinit var passwordtxt: EditText
+    private lateinit var notreg: TextView
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -22,6 +24,13 @@ class LoginActivity : AppCompatActivity() {
         proceedbtn = findViewById(R.id.proceedbtn)
         emailtxt = findViewById(R.id.emailtxt)
         passwordtxt = findViewById(R.id.passwordtxt)
+
+        notreg=findViewById(R.id.notreg)
+        notreg.setOnClickListener {
+            val intent = Intent(this@LoginActivity, SignupActivity::class.java)
+            startActivity(intent)
+            finish()
+        }
 
        proceedbtn.setOnClickListener {
             val email =emailtxt.text.toString().trim()
