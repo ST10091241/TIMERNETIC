@@ -102,8 +102,8 @@ class GroupActivity : AppCompatActivity() {
                             } else {
                                 // Category does not exist, add it to the database
                                 val GroupId = dataReference.push().key
-                                val category = groupData(GroupId!!, groupName)
-                                dataReference.child(GroupId).setValue(category).addOnCompleteListener { groupTask ->
+                                val newgroup=dataReference.push()
+                                newgroup.child("GroupName").setValue(groupName).addOnCompleteListener { groupTask ->
                                     if (groupTask.isSuccessful) {
                                         Toast.makeText(applicationContext, "group added successfully", Toast.LENGTH_SHORT).show()
                                         taskGroupName.text = null
@@ -122,7 +122,7 @@ class GroupActivity : AppCompatActivity() {
                     Toast.makeText(applicationContext, "User is not authenticated", Toast.LENGTH_SHORT).show()
                 }
             } else {
-                Toast.makeText(applicationContext, "Please enter a category name", Toast.LENGTH_SHORT).show()
+                Toast.makeText(applicationContext, "Please enter a Group Name", Toast.LENGTH_SHORT).show()
             }
         }
 
