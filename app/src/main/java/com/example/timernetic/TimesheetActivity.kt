@@ -14,14 +14,19 @@ import androidx.drawerlayout.widget.DrawerLayout
 import com.google.android.material.navigation.NavigationView
 
 class TimesheetActivity : AppCompatActivity() {
-    private lateinit var btntakepicture: Button
-    private lateinit var capturedImageView: ImageView
+
+    private lateinit var taskPictureIV: ImageView
     private var pic: Bitmap? = null
     //Task data
-    private lateinit var edtcatname: EditText
-    private lateinit var edtcatdes: EditText
-    private lateinit var edCategorydate: EditText
-    private lateinit var btnSave: Button
+    private lateinit var closeGroupPopUpBtn: ImageView
+    private lateinit var taskName: EditText
+    private lateinit var taskGroupName: EditText
+    private lateinit var taskDescription: EditText
+    private lateinit var taskStartDate: EditText
+    private lateinit var taskEndDate: EditText
+    //take pic btn
+    private lateinit var taskPicIV: ImageView
+    private lateinit var addGroupbtn:ImageView
 
     private lateinit var drawerLayout: DrawerLayout
     private lateinit var drawerToggle: ActionBarDrawerToggle
