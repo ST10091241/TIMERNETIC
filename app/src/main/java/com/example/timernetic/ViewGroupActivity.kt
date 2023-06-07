@@ -7,11 +7,20 @@ import android.view.MenuItem
 import androidx.appcompat.app.ActionBarDrawerToggle
 import androidx.core.view.GravityCompat
 import androidx.drawerlayout.widget.DrawerLayout
+import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
+import com.example.timernetic.utils.groupAdapter
+import com.example.timernetic.utils.groupData
 import com.google.android.material.navigation.NavigationView
 
 class ViewGroupActivity : AppCompatActivity() {
     private lateinit var drawerLayout: DrawerLayout
     private lateinit var drawerToggle: ActionBarDrawerToggle
+    //recycler view adapter
+    private lateinit var recyclerViewtask: RecyclerView
+    private lateinit var taskAdapter: groupAdapter
+    private val taskList: MutableList<groupData> = mutableListOf()
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         drawerLayout = findViewById(R.id.drawer_layout)
@@ -56,6 +65,18 @@ class ViewGroupActivity : AppCompatActivity() {
             true
         }
         setContentView(R.layout.activity_view_group)
+        //recycler view code
+
+        recyclerViewtask = findViewById(R.id.recyclerView)
+
+        // Create the adapter with an empty category list
+        taskAdapter = groupAdapter(taskList)
+
+        // Set the adapter for the RecyclerView
+        recyclerViewCategories.adapter = categoryAdapter
+
+        // Set the layout manager for the RecyclerView
+        recyclerViewCategories.layoutManager = LinearLayoutManager(this)
     }
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         if (drawerToggle.onOptionsItemSelected(item)) {

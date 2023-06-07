@@ -10,7 +10,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.example.timernetic.R
 import com.example.timernetic.ViewGroupActivity
 
-class groupAdapter (private val groupList: List<groupData>,val userid:String?) :RecyclerView.Adapter<groupAdapter.ViewHolder>() {
+class groupAdapter (private val groupList: List<groupData>) :RecyclerView.Adapter<groupAdapter.ViewHolder>() {
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
         val view = LayoutInflater.from(parent.context).inflate(R.layout.each_group_item, parent, false)
         return ViewHolder(view)
