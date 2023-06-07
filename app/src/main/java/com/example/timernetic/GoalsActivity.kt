@@ -4,6 +4,8 @@ import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.view.MenuItem
+import android.widget.Button
+import android.widget.TimePicker
 import androidx.drawerlayout.widget.DrawerLayout
 import androidx.appcompat.app.ActionBarDrawerToggle
 import androidx.core.view.GravityCompat
@@ -12,6 +14,9 @@ import com.google.android.material.navigation.NavigationView
 class GoalsActivity : AppCompatActivity() {
     private lateinit var drawerLayout: DrawerLayout
     private lateinit var drawerToggle: ActionBarDrawerToggle
+    private lateinit var timePickermin:TimePicker
+    private lateinit var timePickermax: TimePicker
+    private lateinit var AddGoal:Button
     override fun onCreate(savedInstanceState: Bundle?) {
 
         super.onCreate(savedInstanceState)
@@ -60,6 +65,9 @@ class GoalsActivity : AppCompatActivity() {
 
         setContentView(R.layout.activity_goals)
 
+        timePickermin= findViewById(R.id.timePickermin)
+        timePickermax= findViewById(R.id.timePickermax)
+        AddGoal= findViewById(R.id.AddGoal)
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {

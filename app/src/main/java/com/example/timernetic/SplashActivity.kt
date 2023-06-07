@@ -5,7 +5,7 @@ import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.os.Handler
 import com.google.firebase.auth.FirebaseAuth
-import com.google.firebase.database.*
+
 
 class SplashActivity : AppCompatActivity() {
     private val SPLASH_DELAY: Long = 2000 // Delay in milliseconds
