@@ -5,6 +5,7 @@ import android.graphics.Bitmap
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.view.MenuItem
+import android.view.View
 import android.widget.Button
 import android.widget.EditText
 import android.widget.ImageView
@@ -74,6 +75,22 @@ class TimesheetActivity : AppCompatActivity() {
             true
         }
         setContentView(R.layout.activity_timesheet)
+        //close group btn
+        closeGroupPopUpBtn= findViewById(R.id.closeGroupPopUpBtn)
+        closeGroupPopUpBtn.setOnClickListener{
+            val intent = Intent(this@TimesheetActivity, ViewTimesheetActivity::class.java)
+            startActivity(intent)
+        }
+        //loading picture to image view
+        taskPictureIV= findViewById(R.id.taskPictureIV)
+        taskPictureIV.isEnabled = false
+        //taking picture button
+        taskPicIV= findViewById(R.id.taskPicIV)
+        taskPicIV.visibility = View.GONE
+        taskPicIV.isEnabled = false
+        //ON CLICK LISTENER TO TAKE PICTURE
+
+
     }
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         if (drawerToggle.onOptionsItemSelected(item)) {
