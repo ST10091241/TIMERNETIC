@@ -1,15 +1,19 @@
 package com.example.timernetic
 
+import android.Manifest
 import android.content.Intent
+import android.content.pm.PackageManager
 import android.graphics.Bitmap
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.provider.MediaStore
 import android.view.MenuItem
 import android.view.View
 import android.widget.Button
 import android.widget.EditText
 import android.widget.ImageView
 import androidx.appcompat.app.ActionBarDrawerToggle
+import androidx.core.app.ActivityCompat
 import androidx.core.view.GravityCompat
 import androidx.drawerlayout.widget.DrawerLayout
 import com.google.android.material.navigation.NavigationView
@@ -83,14 +87,49 @@ class TimesheetActivity : AppCompatActivity() {
         }
         //loading picture to image view
         taskPictureIV= findViewById(R.id.taskPictureIV)
+        taskPictureIV.visibility = View.GONE
         taskPictureIV.isEnabled = false
         //taking picture button
         taskPicIV= findViewById(R.id.taskPicIV)
-        taskPicIV.visibility = View.GONE
         taskPicIV.isEnabled = false
-        //ON CLICK LISTENER TO TAKE PICTURE
+        //REQUEST FOR CAMERA PERMISSIONS AND ENABLED BUTTON IF ALLOWED
+        if (ActivityCompat.checkSelfPermission(
+                this,
+                Manifest.permission.CAMERA
+            ) != PackageManager.PERMISSION_GRANTED
+        ) {
+            ActivityCompat.requestPermissions(this, arrayOf(Manifest.permission.CAMERA), 111)
+        } else {
+            taskPicIV.isEnabled = true
+        }
+        //OPEN CAMER TAKE PICTURE
+        taskPicIV.setOnClickListener {
+            var icamera = Intent(MediaStore.ACTION_IMAGE_CAPTURE)
+            startActivityForResult(icamera, 101)
+        }
 
 
+    }
+    //ONCE PICTURE TAKEN SAVE PIC AND UPLOAD TO IMAGE VIEW
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        super.onActivityResult(requestCode, resultCode, data)
+        if (requestCode == 101) {
+            pic = data?.getParcelableExtra<Bitmap>("data")
+            taskPictureIV.isEnabled = true
+            taskPictureIV.visibility = View.VISIBLE
+            taskPictureIV.setImageBitmap(pic)
+        }
+    }
+    //FOR CAMERA PERMISSIONS
+    override fun onRequestPermissionsResult(
+        requestCode: Int,
+        permissions: Array<out String>,
+        grantResults: IntArray
+    ) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults)
+        if (requestCode == 111 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+            btntakepicture.isEnabled = true
+        }
     }
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         if (drawerToggle.onOptionsItemSelected(item)) {
