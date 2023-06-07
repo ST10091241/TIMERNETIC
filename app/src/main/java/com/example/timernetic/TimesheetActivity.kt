@@ -79,6 +79,9 @@ class TimesheetActivity : AppCompatActivity() {
             true
         }
         setContentView(R.layout.activity_timesheet)
+        //ADD TO DATABASE
+        addGroupbtn= findViewById(R.id.addGroupbtn)
+
         //close group btn
         closeGroupPopUpBtn= findViewById(R.id.closeGroupPopUpBtn)
         closeGroupPopUpBtn.setOnClickListener{
@@ -128,7 +131,7 @@ class TimesheetActivity : AppCompatActivity() {
     ) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults)
         if (requestCode == 111 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-            btntakepicture.isEnabled = true
+            taskPicIV.isEnabled = true
         }
     }
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
