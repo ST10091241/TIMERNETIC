@@ -88,16 +88,26 @@ class GoalsActivity : AppCompatActivity() {
                     .child("Task")
                     .child(userId)
 
-                val newTask=dataReference.push()
+                val newTask = dataReference.push()
                 newTask.child("Goal minimum").setValue(timePickermin)
-                newTask.child("Goal maximum").setValue(timePickermax).addOnCompleteListener { goalTask ->
-                    if (goalTask.isSuccessful) {
-                        Toast.makeText(applicationContext, "Goals added successfully", Toast.LENGTH_SHORT).show()
+                newTask.child("Goal maximum").setValue(timePickermax)
+                    .addOnCompleteListener { goalTask ->
+                        if (goalTask.isSuccessful) {
+                            Toast.makeText(
+                                applicationContext,
+                                "Goals added successfully",
+                                Toast.LENGTH_SHORT
+                            ).show()
 
-                    } else {
-                        Toast.makeText(applicationContext, goalTask.exception?.message, Toast.LENGTH_SHORT).show()
+                        } else {
+                            Toast.makeText(
+                                applicationContext,
+                                goalTask.exception?.message,
+                                Toast.LENGTH_SHORT
+                            ).show()
+                        }
                     }
-                }
+            }
         }
     }
 
