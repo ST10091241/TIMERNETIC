@@ -19,9 +19,9 @@ class ViewGroupActivity : AppCompatActivity() {
     private lateinit var drawerLayout: DrawerLayout
     private lateinit var drawerToggle: ActionBarDrawerToggle
     //recycler view adapter
-    private lateinit var recyclerViewtask: RecyclerView
-    private lateinit var taskAdapter: groupAdapter
-    private val taskList: MutableList<groupData> = mutableListOf()
+    private lateinit var recyclerViewgroup: RecyclerView
+    private lateinit var groupAdapter: groupAdapter
+    private val groupList: MutableList<groupData> = mutableListOf()
 
     private lateinit var auth: FirebaseAuth
     private lateinit var dataReference: DatabaseReference
@@ -69,16 +69,16 @@ class ViewGroupActivity : AppCompatActivity() {
         }
 
         //recycler view code
-        recyclerViewtask = findViewById(R.id.recyclerView)
+        recyclerViewgroup = findViewById(R.id.recyclerView)
 
         // Create the adapter with an empty task list
-        taskAdapter = groupAdapter(taskList)
+        groupAdapter = groupAdapter(groupList)
 
         // Set the adapter for the RecyclerView
-        recyclerViewtask.adapter = taskAdapter
+        recyclerViewgroup.adapter = groupAdapter
 
         // Set the layout manager for the RecyclerView
-        recyclerViewtask.layoutManager = LinearLayoutManager(this)
+        recyclerViewgroup.layoutManager = LinearLayoutManager(this)
 
         auth = FirebaseAuth.getInstance()
         val currentUser = auth.currentUser
@@ -87,27 +87,27 @@ class ViewGroupActivity : AppCompatActivity() {
 
             // Load task data from Firebase Realtime Database
             val dataReference = FirebaseDatabase.getInstance().reference
-                .child("task")
+                .child("Group")
                 .child(userId)
 
-            val query = dataReference.orderByChild("task").equalTo(userId)
+            val query = dataReference.orderByChild("Group").equalTo(userId)
             query.addValueEventListener(object : ValueEventListener {
                 override fun onDataChange(dataSnapshot: DataSnapshot) {
-                    taskList.clear()
+                    groupList.clear()
 
                     // Iterate through the data snapshot and add tasks to the list
                     for (taskSnapshot in dataSnapshot.children) {
-                        val task =
-                            taskSnapshot.child("task").getValue(String::class.java)
+                        val group =
+                            taskSnapshot.child("GroupName").getValue(String::class.java)
 
-                        task?.let {
-                            val tasks = groupData(it)
-                            taskList.add(tasks)
+                        group?.let {
+                            val groups = groupData(it)
+                            groupList.add(groups)
                         }
                     }
 
                     // Notify the adapter that the data has changed
-                    taskAdapter.notifyDataSetChanged()
+                    groupAdapter.notifyDataSetChanged()
                 }
 
                 override fun onCancelled(databaseError: DatabaseError) {
