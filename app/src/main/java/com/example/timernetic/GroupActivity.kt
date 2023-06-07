@@ -101,7 +101,6 @@ class GroupActivity : AppCompatActivity() {
                                 Toast.makeText(applicationContext, "Group already exists", Toast.LENGTH_SHORT).show()
                             } else {
                                 // Category does not exist, add it to the database
-                                val GroupId = dataReference.push().key
                                 val newgroup=dataReference.push()
                                 newgroup.child("GroupName").setValue(groupName).addOnCompleteListener { groupTask ->
                                     if (groupTask.isSuccessful) {
