@@ -1,15 +1,28 @@
 package com.example.timernetic
 
 import android.content.Intent
+import android.graphics.Bitmap
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.view.MenuItem
+import android.widget.Button
+import android.widget.EditText
+import android.widget.ImageView
 import androidx.appcompat.app.ActionBarDrawerToggle
 import androidx.core.view.GravityCompat
 import androidx.drawerlayout.widget.DrawerLayout
 import com.google.android.material.navigation.NavigationView
 
 class TimesheetActivity : AppCompatActivity() {
+    private lateinit var btntakepicture: Button
+    private lateinit var capturedImageView: ImageView
+    private var pic: Bitmap? = null
+    //Task data
+    private lateinit var edtcatname: EditText
+    private lateinit var edtcatdes: EditText
+    private lateinit var edCategorydate: EditText
+    private lateinit var btnSave: Button
+
     private lateinit var drawerLayout: DrawerLayout
     private lateinit var drawerToggle: ActionBarDrawerToggle
     override fun onCreate(savedInstanceState: Bundle?) {
