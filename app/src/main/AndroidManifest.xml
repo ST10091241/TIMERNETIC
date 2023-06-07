@@ -14,9 +14,7 @@
         <activity
             android:name=".ViewTimesheetActivity"
             android:exported="false" />
-        <activity
-            android:name=".Dailygoal"
-            android:exported="false" />
+
         <activity
             android:name=".ViewGroupActivity"
             android:exported="false" />
